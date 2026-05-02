@@ -14,13 +14,26 @@ st.sidebar.header("Respondent Information")
 st.sidebar.write("Adjust the details to run a prediction.")
 
 # Collecting inputs in the sidebar to keep the main page clean
-age_range = st.sidebar.selectbox("Age Range", ["18-30", "31-40", "41-50", "51-60", "60+"])
-gender = st.sidebar.selectbox("Gender", ["male", "female"])
-marital = st.sidebar.selectbox("Marital Status", ["single", "married", "divorced", "widowed"])
+age_range = st.sidebar.selectbox("Age Range", 
+                                 options=["18-30", "31-40", "41-50", "51-60", "60+"], index=None,
+                                 placeholder="Select Your Age Range...")
+gender = st.sidebar.selectbox("Gender", 
+                              options=["male", "female" ],
+                              index=None,
+                              placeholder="Select Gender...")
+marital = st.sidebar.selectbox("Marital Status",
+                                options=["single", "married", "divorced", "widowed"],
+                                index=None,
+                                placeholder="Select Marital Status...")
 children = st.sidebar.number_input("Number of Children", min_value=0, max_value=20, value=0)
-employment = st.sidebar.selectbox("Employment Status", ["unemployed", "self-employed", "employed", "student"])
+employment = st.sidebar.selectbox("Employment Status", 
+                                  options=["unemployed", "self-employed", "employed", "student"],
+                                  index=None,
+                                  placeholder="Select Employment Status...")
 income_range = st.sidebar.selectbox("Monthly Household Income", 
-                    ["less than 10000", "10001-20000", "20001-30000", "30001-40000", "40001-50000", "50001-60000", "60+"])
+                    options=["less than 10000", "10001-20000", "20001-30000", "30001-40000", "40001-50000", "50001-60000", "60+"],
+                    index=None,
+                    placeholder="Select Household Income...")
 location = st.sidebar.text_input("Location (Coordinates)", "-0.2742 36.0583")
 
 #  Main Page Display
@@ -39,7 +52,11 @@ st.divider()
 #  Prediction 
 if st.sidebar.button("Run Analysis"):
     # Create the dataframe matching the training features exactly 
-    input_data = pd.DataFrame({  
+    
+    if age_range is None or gender is None or marital is None or employment is None or income_range is None:
+        st.error("Please select all required fields before running the Analysis!!")
+    else:
+        input_data = pd.DataFrame({  
         'Age': [age_range],
         'Gender': [gender],
         'Marital Status': [marital],
@@ -47,24 +64,25 @@ if st.sidebar.button("Run Analysis"):
         'Employment Status': [employment],
         'Monthly Household Income': [income_range],
         'Location': [location]
-    })
+        })
 
     # 2. Convert ranges to midpoints (using your functions from utils.py)
-    input_data['Age'] = input_data['Age'].apply(convert_age_to_midpoint)
-    input_data['Monthly Household Income'] = input_data['Monthly Household Income'].apply(convert_income_to_midpoint)
+        input_data['Age'] = input_data['Age'].apply(convert_age_to_midpoint)
+        input_data['Monthly Household Income'] = input_data['Monthly Household Income'].apply(convert_income_to_midpoint)
 
 
     # Get prediction from the loaded model 
-    prediction = model.predict(input_data)
+        prediction = model.predict(input_data)
 
     # Display results visually
-    st.subheader("Analysis Result")
-    if prediction[0].lower() == 'yes':
-        st.success("### ✅ Likely Covered")
-        st.balloons() 
-        st.write("Based on the provided data, this individual likely HAS insurance coverage.")
-    else:
-        st.error("### ❌ Likely Not Covered")
-        st.write("Based on the provided data, this individual likely DOES NOT have insurance coverage.")
+        st.subheader("Analysis Result")
+        if prediction[0].lower() == 'yes':
+            st.success("### ✅ Likely Covered")
+            st.balloons() 
+            st.write("Based on the provided data, this individual likely HAS insurance coverage.")
+        else:
+            st.error("### ❌ Likely Not Covered")
+            st.write("Based on the provided data, this individual likely DOES NOT have insurance coverage.") 
+            
 else:
-    st.info("👈 Please enter the respondent's details in the sidebar and click **'Run Analysis'**.")
+   st.info("👈 Please enter the respondent's details in the sidebar and click **'Run Analysis'**.")
