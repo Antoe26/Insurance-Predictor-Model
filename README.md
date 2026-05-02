@@ -44,12 +44,18 @@ The goal of this project is to leverage data science to understand the factors i
 
 ---
 
-## 📊 Model Performance
-The model was evaluated using **5-fold cross-validation**, achieving a mean accuracy of approximately **70.9%**.
+## 📊 Model Insights and Performance
+The model is powered by a Random Forest Classifier, achieving a mean accuracy of approximately 70.9%.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/d78bad57-4e3e-4bc2-bc87-192a0d732af1" width="800" />
 </p>
+
+## What Influences the Prediction?
+Users can toggle "Show Model Insights" in the app to see a real-time bar chart of feature importances. This reveals which factors—such as Monthly Income or Employment Status—the model weighs most heavily when making a prediction 
+
+<img width="957" height="431" alt="image" src="https://github.com/user-attachments/assets/7860965d-0e78-4fbd-8cb4-e83cab502dc2" />
+
 
 ---
 
@@ -57,7 +63,7 @@ The model was evaluated using **5-fold cross-validation**, achieving a mean accu
 
 1. **Clone the repo:**
    ```bash
-   git clone  (https://github.com/Antoe26/Insurance-Predictor.git)
+   git clone   (https://github.com/Antoe26/Insurance-Predictor-Model.git)
 2. **Create a virtual environment:**
    ```bash
     python3 -m venv venv
