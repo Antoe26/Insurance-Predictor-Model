@@ -2,7 +2,7 @@
 
 This project features an end-to-end **Machine Learning Pipeline** designed to predict whether an individual in Kenya likely has health insurance coverage. It uses a **Random Forest Classifier** trained on demographic and socio-economic survey data.
 
-🔗 **[View Live App Here] (https://insurance-predictor-model-anthony.streamlit.app/)** 🚀 
+🔗 **[View Live App Here](https://insurance-predictor-model-anthony.streamlit.app/)**  🚀 
 
 ---
 
