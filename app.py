@@ -49,6 +49,44 @@ and predict if a respondent is likely to have health insurance coverage.
 
 st.divider()
 
+# Insights showing factors affecting prediction
+if st.sidebar.checkbox("Show Model Insights"):
+    st.subheader("📊 What influences the prediction? Factors affecting Prediction.")
+    
+    try:
+        # 1. Get the model from the pipeline
+        rf_model = model.named_steps['model']
+        importances = rf_model.feature_importances_
+        
+        # 2. Get feature names more reliably
+        # We try to get them from the Processor step
+        processor = model.named_steps['processor']
+        
+        try:
+            # Standard way for newer scikit-learn
+            feature_names = processor.get_feature_names_out()
+        except:
+            # Fallback for older versions or specific configurations
+            num_cols = processor.transformers_[0][2]
+            cat_transformer = processor.transformers_[1][1]
+            cat_cols = cat_transformer.named_steps['onehot'].get_feature_names_out(processor.transformers_[1][2])
+            feature_names = list(num_cols) + list(cat_cols)
+
+        # 3. Create the Series and plot
+        feat_importances = pd.Series(importances, index=feature_names)
+        
+        # Clean up the names (removes 'cat__' or 'num__' prefixes for a prettier chart)
+        feat_importances.index = [name.split('__')[-1] for name in feat_importances.index]
+        
+        top_10 = feat_importances.nlargest(10)
+        st.bar_chart(top_10)
+        st.info("The chart shows the top 10 factors affecting the prediction.")
+
+    except Exception as e:
+        # This will print the actual error to your Streamlit app so you can see it
+        st.warning(f"Feature importance alignment error: {e}")
+
+
 #  Prediction 
 if st.sidebar.button("Run Analysis"):
     # Create the dataframe matching the training features exactly 
@@ -86,3 +124,4 @@ if st.sidebar.button("Run Analysis"):
             
 else:
    st.info("👈 Please enter the respondent's details in the sidebar and click **'Run Analysis'**.")
+
